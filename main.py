@@ -12,7 +12,6 @@ from app.handlers import router
 from app.database.db import connect_db
 
 class MessageLogMiddleware(BaseMiddleware):
-
     async def __call__(
         self,
         handler: Callable[[Message, Dict[str, Any]], Awaitable[Any]],
@@ -23,6 +22,7 @@ class MessageLogMiddleware(BaseMiddleware):
         return await handler(event, data)
 
 async def main():
+    load_dotenv()
     bot = Bot(token=os.getenv('TOKEN'))
     dp = Dispatcher()
     logging.basicConfig(level=logging.DEBUG, filename='bot.log') # Выставляем уровень логов на INFO
