@@ -6,19 +6,10 @@ from datetime import timedelta, datetime
 import os
 from dotenv import load_dotenv
 
+from link_loggin_password import url_rk, url_objects, url_object_order, url_application, login, password
+
 user = fake_useragent.UserAgent().random
 session = requests.session()
-
-
-url = 'https://l.ucs.ru/ls5api/api/Auth/Login'
-url_object = 'https://l.ucs.ru/ls5api/api/Object/GetObjectById'
-url_objects = 'https://l.ucs.ru/ls5api/api/Object/GetObjectList'
-url_object_order = 'https://l.ucs.ru/ls5api/api/Order/GetOrdersByObjectIdList'
-url_application = 'https://l.ucs.ru/ls5api/api/Order/GetOrderByIdRequest'
-
-
-login = 'lar@solardsoft.ru'
-password = '1q2w3e4R!'
 
 today = datetime.now()
 dateEnd = today + timedelta(days=15)
@@ -35,11 +26,11 @@ header_file = {
 data_login =  {"RequestObject": {"login": login,
     "pass": password,
     'systemVersion': "v5"}
-    }
+}
 
 
 def chekRk(codeRk):
-    response = session.post(os.getenv('url_rk'), json=data_login, headers=header).json()
+    response = session.post(url_rk, json=data_login, headers=header).json()
     SessionId = response['value']['guid']
     langId = response['value']['langId']
     objectId, objectName = find_object(codeRk, SessionId, langId)

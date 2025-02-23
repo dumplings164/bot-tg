@@ -3,18 +3,15 @@ import requests
 import os
 from dotenv import load_dotenv
 
+from link_loggin_password import url_pyrus, api_key, url_task, url_upload, login_pyrus, form_id
 
-
-url_pyrus = 'https://api.pyrus.com/v4/auth/'
-api_key = "YPhSjh0khp2uu-b4~pMx5AAUZRhh~cOeqOq3WqPYxzkTqR-lHaXZCJj6M4ApHUA2Ls6WkRRB7pMNs-V7JGbNLVM0pZygWbzu"
-url_task = "https://api.pyrus.com/v4/tasks"
-url_upload = "https://api.pyrus.com/v4/files/upload"
 
 def creat_task(name, inn, problem, soft, soft_id, number, photo):
     access_token = get_access_token()
     guid_photo = post_file(access_token, photo)
     id_post = post_task(access_token, name, inn, problem, soft, soft_id, number, guid_photo)
     return id_post
+
 
 def info_task(idTask):
     access_token = get_access_token()
@@ -24,12 +21,13 @@ def info_task(idTask):
 
 def get_access_token():
     response = requests.get(url_pyrus, params={ 
-                                    "login" : "mva@solardsoft.ru",
+                                    "login" : login_pyrus,
                                     "security_key" : api_key
                                     })
     response = response.text.strip("}").split(":")
     access_token = response[1].strip("\"")
     return access_token
+
 
 def post_file(access_token, photo):
     response = requests.post(url_upload, files={photo: (photo, open(photo, 'rb'))}, headers = {
@@ -41,7 +39,7 @@ def post_file(access_token, photo):
 
 def post_task(access_token, name, inn, problem, soft, soft_id, number, guid_photo):
     data = {
-        "form_id": 1235352,
+        "form_id": form_id,
         "fields": [
             {
             "id": 23,#Поле Имя отправителя
@@ -75,7 +73,8 @@ def post_task(access_token, name, inn, problem, soft, soft_id, number, guid_phot
     id_post = response.json()
     id_post = id_post["task"]["id"]
     return id_post
-    
+ 
+   
 def get_task(access_token, id_post_old):
     url = f"{url_task}/{id_post_old}"
     try:
@@ -90,6 +89,5 @@ def get_task(access_token, id_post_old):
         print(ex)
         
         
-
 if __name__ == '__main__':
     get_access_token()
