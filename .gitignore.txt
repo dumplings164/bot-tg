@@ -1,6 +1,0 @@
-.gitignore
-.venv
-.env
-link_loggin_password.py
-db.sqlite3
-bot.log
